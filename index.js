@@ -1,7 +1,23 @@
-if (typeof process !== 'undefined' && !process.browser && process.platform !== 'browser' && parseInt(process.versions.node.split('.')[0]) < 18) {
-  console.error('Your node version is currently', process.versions.node)
-  console.error('Please update it to a version >= 22.x.x from https://nodejs.org/')
-  process.exit(1)
-}
+const mineflayer = require('mineflayer');
 
-module.exports = require('./lib/loader.js')
+const bot = mineflayer.createBot({
+  host: 'shadowraid.freeservers.cloud',  // <-- Yahan PowerUpStack server IP
+  port: 25565,
+  username: 'noob_#tr'      // <-- Jo bhi naam chahte ho server me
+});
+
+bot.on('spawn', () => {
+  console.log('Bot joined server!');
+
+  // AFK jump every 30 sec
+  setInterval(() => {
+    bot.setControlState('jump', true);
+    setTimeout(() => bot.setControlState('jump', false), 500);
+  }, 30000);
+});
+
+// Optional: Express server for 24/7 uptime
+const express = require('express');
+const app = express();
+app.get('/', (req, res) => res.send('Bot Online'));
+app.listen(3000, () => console.log('Web server ready'));
